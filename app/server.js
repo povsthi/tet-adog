@@ -48,17 +48,17 @@ app.get('/', (req, res) => {
 });
 
 app.get('/usuarios', (req, res) => {
-    execSQLQuery("SELECT * from usuario", [], res);
+    execSQLQuery("SELECT * from Usuario", [], res);
 });
 
 app.post('/usuarios', (req, res) => {
     const id = [req.body.nome, req.body.email, req.body.senha];
-    execSQLQuery("INSERT INTO usuario VALUES(null, ?, ?, ?)", id, res);
+    execSQLQuery("INSERT INTO Usuario VALUES(null, ?, ?, ?)", id, res);
 });
 
 app.post('/login', async (req, res) => {
     const id = [req.body.email, req.body.senha];
-    let result = await resultSQLQuery('SELECT * FROM usuario WHERE usu_email=? and usu_senha=?', id);
+    let result = await resultSQLQuery('SELECT * FROM Usuario WHERE usu_email=? and usu_senha=?', id);
 
     if (result.length > 0) {
         res.json({ 
@@ -74,17 +74,17 @@ app.post('/login', async (req, res) => {
 
 app.put('/usuarios/:id', (req, res) => {
     const id = [req.body.nome, req.body.email, req.body.senha, req.params.id];
-    execSQLQuery("UPDATE usuario SET usu_nome=?, usu_email=?, usu_senha=? WHERE usu_id=?", id, res);
+    execSQLQuery("UPDATE Usuario SET usu_nome=?, usu_email=?, usu_senha=? WHERE usu_id=?", id, res);
 });
 
 app.delete('/usuarios/:id', (req, res) => {
     const id = [req.params.id];
-    execSQLQuery("DELETE FROM usuario WHERE usu_id=?", id, res);
+    execSQLQuery("DELETE FROM Usuario WHERE usu_id=?", id, res);
 });
 
 app.get('/usuarios/:id', (req, res) => {
     const id = [req.params.id];
-    execSQLQuery("SELECT * FROM usuario WHERE usu_id=?", id, res);
+    execSQLQuery("SELECT * FROM Usuario WHERE usu_id=?", id, res);
 });
 
 app.listen(port, () => {
