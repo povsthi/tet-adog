@@ -12,7 +12,7 @@ const AtualizaUsuario = ({ navigation, route }) => {
   useEffect(() => {
     async function fetchItem() {
       try {
-        let response = await fetch(`https://tet2-thiago.glitch.me/usuarios/${idUsuario}`, {
+        let response = await fetch(`http://localhost:3000/usuarios/${idUsuario}`, {
           headers: {
             'Content-Type': 'application/json',
           }

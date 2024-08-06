@@ -14,7 +14,7 @@ function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Image source={require('/assets/LogoAdog.png')} style={styles.logo} />
+        <Image source={require('./assets/LogoAdog.png')} style={styles.logo} />
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('CadastroUsuario')}

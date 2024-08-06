@@ -18,7 +18,7 @@ const CadastroUsuario = ({ navigation }) => {
     var userObj = { nome: nome, email: email, senha: senha };
     var jsonBody = JSON.stringify(userObj);
     console.log(jsonBody);
-    fetch('https://tet2-thiago.glitch.me/usuarios', {
+    fetch('http:localhost:3000/usuarios', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ const CadastroUsuario = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('/assets/LogoAdog.png')} style={styles.logo} />
+      <Image source={require('./assets/LogoAdog.png')} style={styles.logo} />
       <TextInput
         style={styles.input}
         placeholder="Nome"

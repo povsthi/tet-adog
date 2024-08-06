@@ -19,7 +19,7 @@ const db = {
 
 const execSQLQuery = (sqlQry, id, res) => {
     const connection = mysql.createConnection(db);
-    connection.query(sqlQry, id, (error, results) => {
+    connection.query(sqlQry, id, (error, results, fields) => {
         if (error) {
             res.json(error);
         } else {
@@ -30,64 +30,122 @@ const execSQLQuery = (sqlQry, id, res) => {
     });
 };
 
-async function resultSQLQuery(sqlQry, id) {
-    const connection = await mysql.createConnection(db);
-    try {
-        let [result] = await connection.promise().query(sqlQry, id);
-        return result;
-    } catch (error) {
-        console.log("Erro: " + error);
-        throw error;
-    } finally {
-        connection.end();
-    }
-}
-
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
 app.get('/usuarios', (req, res) => {
-    execSQLQuery("SELECT * from Usuario", [], res);
+    const id = [];
+    execSQLQuery("SELECT * from Usuario", id, res);
+});
+
+app.get('/pets', (req, res) => {
+    const id = [];
+    execSQLQuery("SELECT * from Pet", id, res);
+});
+
+app.get('/racas', (req, res) => {
+    const id = [];
+    execSQLQuery("SELECT * from Raca", id, res);
+});
+
+app.get('/parceiros', (req, res) => {
+    const id = [];
+    execSQLQuery("SELECT * from Parceiro", id, res);
 });
 
 app.post('/usuarios', (req, res) => {
-    const id = [req.body.nome, req.body.email, req.body.senha];
-    execSQLQuery("INSERT INTO Usuario VALUES(null, ?, ?, ?)", id, res);
+    console.log('Recebendo requisição POST em /usuarios');
+    const { email, nomeUsuario, cpf, telefoneUsuario, senha, rua, cidade, bairro, numero, tipo, foto, data_nascimento, descricao } = req.body;
+    console.log('Dados recebidos:', req.body);
+
+    const id = [email, nomeUsuario, cpf, telefoneUsuario, senha, rua, cidade, bairro, numero, tipo, foto, data_nascimento, descricao];
+    const query = `INSERT INTO Usuario (email, nomeUsuario, cpf, telefoneUsuario, senha, rua, cidade, bairro, numero, tipo, foto, data_nascimento, descricao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    execSQLQuery(query, id, res);
 });
+
+app.post('/pets', (req, res) => {
+    console.log('Recebendo requisição POST em /pets');
+    const { nomePet, tipoPet, raca, sexo, porte, dataNascimento } = req.body;
+    console.log('Dados recebidos:', req.body);
+
+    const id = [nomePet, tipoPet, raca, sexo, porte, dataNascimento];
+    const query = `INSERT INTO Pet (nomePet, tipoPet, raca, sexo, porte, dataNascimento) VALUES (?, ?, ?, ?, ?, ?)`;
+
+    execSQLQuery(query, id, res);
+});
+
+app.post('/racas', (req, res) => {
+    console.log('Recebendo requisição POST em /racas');
+    const { nomeRaca, porteRaca, comportamento, quantPelo } = req.body;
+    console.log('Dados recebidos:', req.body);
+
+    const id = [nomeRaca, porteRaca, comportamento, quantPelo];
+    const query = `INSERT INTO Raca (nomeRaca, porteRaca, comportamento, quantPelo) VALUES (?, ?, ?, ?)`;
+
+    execSQLQuery(query, id, res);
+});
+
+app.post('/parceiros', (req, res) => {
+    console.log('Recebendo requisição POST em /parceiros');
+    const { nomeParceiro, tipoParceiro, telefoneParceiro, local_parceiro } = req.body;
+    console.log('Dados recebidos:', req.body);
+
+    const id = [nomeParceiro, tipoParceiro, telefoneParceiro, local_parceiro];
+    const query = `INSERT INTO Parceiro (nomeParceiro, tipoParceiro, telefoneParceiro, local_parceiro) VALUES (?, ?, ?, ?)`;
+
+    execSQLQuery(query, id, res);
+});
+
+app.post('/anuncios', (req, res) => {
+    console.log('Recebendo requisição POST em /anuncios');
+    const { tipoAnuncio, dataAnuncio } = req.body;
+    console.log('Dados recebidos:', req.body);
+
+    const id = [tipoAnuncio, dataAnuncio];
+    const query = `INSERT INTO Anuncio (tipoAnuncio, dataAnuncio) VALUES (?, ?)`;
+
+    execSQLQuery(query, id, res);
+});
+
+app.post('/interesses', (req, res) => {
+    console.log('Recebendo requisição POST em /interesses');
+    const { idUsuario, idPet } = req.body;
+    console.log('Dados recebidos:', req.body);
+
+    const id = [idUsuario, idPet];
+    const query = `INSERT INTO Interesses (idUsuario, idPet) VALUES (?, ?)`;
+
+    execSQLQuery(query, id, res);
+});
+
+async function resultSQLQuery(sqlQry, id) {
+    const connection = await mysql.createConnection(db);
+    let [result] = await connection.promise().query(sqlQry, id);
+    try {
+        return result;
+    } catch (error) {
+        console.log("Erro: " + error);
+        throw error;
+    }
+}
 
 app.post('/login', async (req, res) => {
     const id = [req.body.email, req.body.senha];
-    let result = await resultSQLQuery('SELECT * FROM Usuario WHERE usu_email=? and usu_senha=?', id);
+    let result = await resultSQLQuery('SELECT * FROM Usuario WHERE email=? and senha=?', id);
 
-    if (result.length > 0) {
-        res.json({ 
-            "mensagem": "Usuário válido",
-            "idUsuario": result[0].usu_id
-        });
-    } else {
+    if (result.length > 0)
+        res.json({ "mensagem": "Usuário válido" });
+    else {
         res.json({ "mensagem": "Usuário Inválido" });
     }
     console.log(result);
-});
-
-
-app.put('/usuarios/:id', (req, res) => {
-    const id = [req.body.nome, req.body.email, req.body.senha, req.params.id];
-    execSQLQuery("UPDATE Usuario SET usu_nome=?, usu_email=?, usu_senha=? WHERE usu_id=?", id, res);
-});
-
-app.delete('/usuarios/:id', (req, res) => {
-    const id = [req.params.id];
-    execSQLQuery("DELETE FROM Usuario WHERE usu_id=?", id, res);
-});
-
-app.get('/usuarios/:id', (req, res) => {
-    const id = [req.params.id];
-    execSQLQuery("SELECT * FROM Usuario WHERE usu_id=?", id, res);
+    console.log("brilhou");
 });
 
 app.listen(port, () => {
-    console.log('App escutando a porta ' + port);
+    console.log(`App escutando a porta ${port}`);
 });
+
 
