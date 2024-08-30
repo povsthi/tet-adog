@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './Login';
 import CadastroUsuario from './CadastroUsuario';
 import AtualizaUsuario from './AtualizaUsuario';
+import List from './List';
 
 
 const Stack = createStackNavigator();
@@ -27,6 +28,7 @@ function HomeScreen({ navigation }) {
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+        <List/>
       </View>
     </SafeAreaView>
   );

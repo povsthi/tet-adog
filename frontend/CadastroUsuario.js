@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import CustomTextInput from './components/CustomTextInput'
+import { ScrollView, View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import CustomTextInput from './components/CustomTextInput';
 
 const CadastroUsuario = ({ navigation }) => {
-  console.log("Cadastro feito com sucesso!");
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [data, setDataNascimento] = useState('');
@@ -14,12 +13,10 @@ const CadastroUsuario = ({ navigation }) => {
   const [numero, setNumero] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  
 
   const Cadastrar = () => {
-
-    if(!nome || !email || !senha || !confirmarSenha || !cpf || !estado || !cidade || !rua || !numero) {
-      console.log("Todos os campos são obrigatórios!");
+    if (!nome || !email || !senha || !confirmarSenha || !cpf || !estado || !cidade || !rua || !numero) {
+      Alert.alert("Erro", "Todos os campos são obrigatórios!");
       return;
     }
 
@@ -31,7 +28,7 @@ const CadastroUsuario = ({ navigation }) => {
     var userObj = { nome: nome, email: email, senha: senha };
     var jsonBody = JSON.stringify(userObj);
     console.log(jsonBody);
-    fetch('http://200.18.141.93:3000/usuarios', {
+    fetch('http://localhost:3000/usuarios', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,22 +76,6 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '100%',
   },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
-  input: {
-    color: "black",
-    borderRadius: 30,
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    textAlign: 'center',
-    width: '80%',
-  },
   button: {
     margin: 10,
     padding: 15,
@@ -106,3 +87,4 @@ const styles = StyleSheet.create({
 });
 
 export default CadastroUsuario;
+

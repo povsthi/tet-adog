@@ -6,10 +6,8 @@ export function Login({ navigation }) {
   const [senha, setSenha] = useState('');
 
   const verificarLogin = async () => {
-    console.log("Verificando Login");
     const userObj = { email, senha };
     const jsonBody = JSON.stringify(userObj);
-    console.log(jsonBody);
 
     try {
       const response = await fetch('http://localhost:3000/login', {
@@ -22,7 +20,6 @@ export function Login({ navigation }) {
       });
 
       const json = await response.json();
-      console.log(json);
 
       if (json.mensagem === 'Usuário válido') {
         if (json.idUsuario) {
@@ -36,7 +33,6 @@ export function Login({ navigation }) {
         Alert.alert("Erro", "Usuário inválido");
       }
     } catch (err) {
-      console.error("Erro ao verificar login: ", err);
       Alert.alert("Erro", "Não foi possível verificar o login. Tente novamente mais tarde.");
     }
   };
@@ -46,24 +42,22 @@ export function Login({ navigation }) {
       <Image source={require('./assets/LogoAdog.png')} style={styles.logo} />
       <TextInput
         style={styles.input}
-        onChangeText={setEmail}
+        placeholder="Email"
         value={email}
-        placeholder="E-mail"
-        placeholderTextColor="#666"
+        onChangeText={setEmail}
       />
       <TextInput
         style={styles.input}
-        onChangeText={setSenha}
-        value={senha}
         placeholder="Senha"
-        placeholderTextColor="#666"
+        value={senha}
+        onChangeText={setSenha}
         secureTextEntry
       />
-      <TouchableOpacity onPress={() => navigation.navigate('CadastroUsuario')}>
-        <Text style={styles.button}>Registrar agora!</Text>
-      </TouchableOpacity>
       <TouchableOpacity onPress={verificarLogin}>
-        <Text style={styles.button}>Entrar</Text>
+        <Text style={styles.button}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('CadastroUsuario')}>
+        <Text style={styles.button}>Cadastrar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -105,6 +99,7 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+
 
 
 
