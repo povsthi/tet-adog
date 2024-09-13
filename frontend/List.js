@@ -1,72 +1,68 @@
-import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  FlatList,
-  StyleSheet,
-  Text,
-  StatusBar,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, View, Text, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import Header from './components/Header';
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    description: 'thiaguinho',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-    description: 'thithi',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-    description: 'thito',
-  },
-  {
-    id: '58695a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Fourth Item',
-    description: 'oiee',
-  },
-];
+const PetList = () => {
+  const [pets, setPets] = useState([]);
 
-const Item = ({title, description}) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-    <Text style={styles.description}>{description}</Text>
-  </View>
-);
+  const fetchPets = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/pets'); 
+      if (!response.ok) {
+        throw new Error('Erro na resposta da API');
+      }
+      const data = await response.json();
+      setPets(data);
+    } catch (error) {
+      console.error('Erro ao buscar pet:', error);
+      Alert.alert('Erro', 'Não foi possível buscar a lista de pets.');
+    }
+  };
 
-const List = () => {
+  useEffect(() => {
+    fetchPets();
+  }, []);
+
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <Text style={styles.nome}>Nome: {item.nomePet}</Text>
+      <Text>Tipo: {item.tipoPet}</Text>
+      <Text>Raça: {item.raca}</Text>
+      <Text>Sexo: {item.sexo}</Text>
+      <Text>Porte: {item.porte}</Text>
+      <Text>Data de Nascimento: {item.dataNascimento}</Text>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
+      <Header />
       <FlatList
-        data={DATA}
-        renderItem={({item}) => <Item title={item.title} description={item.description} />}
-        keyExtractor={item => item.id}
-      />    </SafeAreaView>
+        data={pets}
+        keyExtractor={(item) => item.idPet.toString()}
+        renderItem={renderItem}
+      />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    padding: 10,
   },
   item: {
     backgroundColor: '#f9c2ff',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+    borderRadius: 8,
   },
-  title: {
-    fontSize: 32,
-  },
-  description: {
-    fontSize: 16,
-
+  nome: {
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });
 
-export default List;
+export default PetList;
+
