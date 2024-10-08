@@ -144,6 +144,54 @@ app.post('/login', async (req, res) => {
     console.log("brilhou");
 });
 
+
+app.put('/pets/:idPet', (req, res) => {
+    const idPet = req.params.idPet; 
+    const { nomePet, tipoPet, raca, sexo, porte, dataNascimento } = req.body;
+
+    const query = `
+        UPDATE Pet 
+        SET nomePet = ?, tipoPet = ?, raca = ?, sexo = ?, porte = ?, dataNascimento = ?
+        WHERE idPet = ?
+    `;
+
+    const params = [nomePet, tipoPet, raca, sexo, porte, dataNascimento, idPet];
+    execSQLQuery(query, params, res);
+});
+
+
+app.put('/usuarios/:idUsuario', (req, res) => {
+    const idUsuario = req.params.idUsuario; 
+    const { email, nomeUsuario, cpf, telefoneUsuario, senha, rua, cidade, bairro, numero, tipo, foto, data_nascimento, descricao } = req.body; // Obtém os dados atualizados do corpo da requisição
+
+    const query = `
+        UPDATE Usuario 
+        SET email = ?, nomeUsuario = ?, cpf = ?, telefoneUsuario = ?, senha = ?, rua = ?, cidade = ?, bairro = ?, numero = ?, tipo = ?, foto = ?, data_nascimento = ?, descricao = ?
+        WHERE idUsuario = ?
+    `;
+
+    const params = [email, nomeUsuario, cpf, telefoneUsuario, senha, rua, cidade, bairro, numero, tipo, foto, data_nascimento, descricao, idUsuario];
+    execSQLQuery(query, params, res);
+});
+
+
+
+app.delete('/pets/:idPet', (req, res) => {
+    const idPet = req.params.idPet; 
+    const query = `DELETE FROM Pet WHERE idPet = ?`;
+
+    execSQLQuery(query, [idPet], res);
+});
+
+
+app.delete('/usuarios/:idUsuario', (req, res) => {
+    const idUsuario = req.params.idUsuario; 
+    const query = `DELETE FROM Usuario WHERE idUsuario = ?`;
+
+    execSQLQuery(query, [idUsuario], res);
+});
+
+
 app.listen(port, () => {
     console.log(`App escutando a porta ${port}`);
 });

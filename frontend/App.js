@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './Login';
 import CadastroUsuario from './CadastroUsuario';
 import AtualizaUsuario from './AtualizaUsuario';
-import PetList from './List';
+import { PetList } from './List';
 
 
 const Stack = createStackNavigator();
@@ -16,7 +16,6 @@ function HomeScreen({ navigation }) {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Image source={require('./assets/LogoAdog.png')} style={styles.logo} />
-        <PetList />
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('CadastroUsuario')}
@@ -48,7 +47,7 @@ export default function App() {
         <Stack.Screen name="CadastroUsuario" component={CadastroUsuario} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="AtualizaUsuario" component={AtualizaUsuario} />
-        <Stack.Screen name="Petlist" component={PetList} />
+        <Stack.Screen name="PetList" component={PetList} />
       </Stack.Navigator>
     </NavigationContainer>
   );
